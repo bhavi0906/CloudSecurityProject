@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import os
+from flask_sqlalchemy import SQLAlchemy
+import os
 
 app = Flask(__name__)
 
@@ -11,7 +13,8 @@ app.config["SECRET_KEY"] = "cloudsecurityproject"
 os.makedirs("database", exist_ok=True)
 
 # SQLite database path
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database/users.db"
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(basedir, "database", "users.db")
 
 # Disable modification tracking
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -33,6 +36,8 @@ class User(db.Model):
 
 @app.route("/")
 def home():
+    return "<h1>Cloud Security Dashboard</h1>"
+
     return "<h1>Cloud Security Dashboard</h1>"
 
 
