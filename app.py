@@ -1,48 +1,17 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-import os
-from flask_sqlalchemy import SQLAlchemy
-import os
+from config import Config
+from models import db
 
 app = Flask(__name__)
+app.config.from_object(Config)
 
-# Secret key used for sessions and forms
-app.config["SECRET_KEY"] = "cloudsecurityproject"
-
-# Create database folder if it doesn't exist
-os.makedirs("database", exist_ok=True)
-
-# SQLite database path
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(basedir, "database", "users.db")
-
-# Disable modification tracking
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-# Initialize database
-db = SQLAlchemy(app)
-
-
-class User(db.Model):
-
-    id = db.Column(db.Integer, primary_key=True)
-
-    username = db.Column(db.String(100), unique=True, nullable=False)
-
-    email = db.Column(db.String(150), unique=True, nullable=False)
-
-    password = db.Column(db.String(255), nullable=False)
-
+db.init_app(app)
 
 @app.route("/")
 def home():
-    return "<h1>Cloud Security Dashboard</h1>"
-
-    return "<h1>Cloud Security Dashboard</h1>"
-
+    return "<h1>Cloud Security Dashboard</h1><p>Backend configured successfully!</p>"
 
 if __name__ == "__main__":
     with app.app_context():
-        db.create_all()
-
-    app.run(debug=True)
+        db.create_all()   # Creates users.db tables if they don't exist
+    app.run(host="127.0.0.1", port=5000, debug=True)
