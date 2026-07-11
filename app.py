@@ -1,17 +1,20 @@
 from flask import Flask
 from config import Config
-from models import db
+from extensions import db, bcrypt, login_manager
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
 db.init_app(app)
+bcrypt.init_app(app)
+login_manager.init_app(app)
 
-@app.route("/")
-def home():
-    return "<h1>Cloud Security Dashboard</h1><p>Backend configured successfully!</p>"
+from routes.auth import *
+from routes.dashboard import *
+from routes.admin import *
+
+with app.app_context():
+    db.create_all()
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()   # Creates users.db tables if they don't exist
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    app.run(debug=True)

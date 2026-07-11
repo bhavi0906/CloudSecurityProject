@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+    <h2>Cloud Security Login</h2>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        <p>
+            {{ form.email.label }}<br>
+            {{ form.email(size=35) }}
+        </p>
+
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(size=35) }}
+        </p>
+
+        <p>{{ form.submit() }}</p>
+    </form>
+
+    <p>
+        Don't have an account?
+        <a href="{{ url_for('register') }}">Register</a>
+    </p>
+</body>
+</html>
