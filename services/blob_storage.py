@@ -1,6 +1,9 @@
+from dotenv import load_dotenv
 from azure.storage.blob import BlobServiceClient
 from werkzeug.utils import secure_filename
 import os
+
+load_dotenv()
 
 CONNECTION_STRING = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
 CONTAINER_NAME = "uploads"

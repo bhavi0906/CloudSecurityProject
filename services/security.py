@@ -5,7 +5,6 @@ from flask_login import current_user
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        print("Logged in role:",current_user.role)
 
         if current_user.role != "Admin":
             abort(403)

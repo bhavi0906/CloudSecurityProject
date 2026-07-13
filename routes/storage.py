@@ -1,8 +1,9 @@
-from flask import render_template, request, redirect, flash
-from app import app
+from flask import render_template, request, redirect, flash, Blueprint
 from services.blob_storage import upload_file
 
-@app.route("/upload", methods=["GET", "POST"])
+storage = Blueprint("storage", __name__)
+
+@storage.route("/upload", methods=["GET", "POST"])
 def upload():
     if request.method == "POST":
         file = request.files.get("file")
