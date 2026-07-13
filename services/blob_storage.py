@@ -1,26 +1,23 @@
+import os
+from dotenv import load_dotenv
 from azure.storage.blob import BlobServiceClient
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 from werkzeug.utils import secure_filename
-import os
 
-# Load .env only for local development
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
-    pass
+load_dotenv()
 
-# First try local .env
+# Local development
 CONNECTION_STRING = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
 
-# If not found, fetch from Azure Key Vault
-if not CONNECTION_STRING:
-    KEYVAULT_NAME = "bhavyansh-keyvault"
-    KV_URI = f"https://{KEYVAULT_NAME}.vault.azure.net/"
-
+# Running on Azure App Service
+if os.getenv("WEBSITE_SITE_NAME"):
     credential = DefaultAzureCredential()
-    client = SecretClient(vault_url=KV_URI, credential=credential)
+
+    client = SecretClient(
+        vault_url="https://bhavyansh-keyvault.vault.azure.net/",
+        credential=credential
+    )
 
     CONNECTION_STRING = client.get_secret(
         "AZURE-STORAGE-CONNECTION-STRING"
@@ -28,9 +25,7 @@ if not CONNECTION_STRING:
 
 CONTAINER_NAME = "uploads"
 
-blob_service_client = BlobServiceClient.from_connection_string(
-    CONNECTION_STRING
-)
+blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
 
 def upload_file(file):
     filename = secure_filename(file.filename)

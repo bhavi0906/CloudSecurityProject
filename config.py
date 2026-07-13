@@ -1,40 +1,31 @@
 import os
+from dotenv import load_dotenv
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
-from urllib.parse import quote_plus
+
+load_dotenv()
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-
 class Config:
+
     SECRET_KEY = "cloudsecurityproject"
 
-    # Local SQLite (fallback)
-    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(
-        basedir, "database", "users.db"
-    )
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    # Running on Azure?
+    # Local development
+    SQLALCHEMY_DATABASE_URI = os.getenv("AZURE_SQL_CONNECTION_STRING")
+
+    # Running in Azure App Service
     if os.getenv("WEBSITE_SITE_NAME"):
-
-        vault_url = "https://bhavyansh-keyvault.vault.azure.net/"
 
         credential = DefaultAzureCredential()
 
         client = SecretClient(
-            vault_url=vault_url,
+            vault_url="https://bhavyansh-keyvault.vault.azure.net/",
             credential=credential
         )
 
-        conn = client.get_secret(
+        SQLALCHEMY_DATABASE_URI = client.get_secret(
             "AZURE-SQL-CONNECTION-STRING"
         ).value
-
-        
-        
-
-        SQLALCHEMY_DATABASE_URI = (
-            "mssql+pyodbc:///?odbc_connect=" + quote_plus(conn)
-        )
-
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
