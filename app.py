@@ -12,7 +12,7 @@ if os.getenv("WEBSITE_SITE_NAME"):
 #connection_string=os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING")
 
 #if connection_string:
-#    configure_azure_monitor(connection_string=connection_string)
+#    configure_azure_monitor(connection_string=connection_string) this is a comment
 
 from flask import Flask
 from config import Config
