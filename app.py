@@ -33,8 +33,8 @@ app.register_blueprint(storage)
 from routes.admin import admin
 app.register_blueprint(admin)
 
-with app.app_context():
-    db.create_all()
+#with app.app_context():
+ #   db.create_all()
 
 if __name__ == "__main__":
     app.run(debug=True)
